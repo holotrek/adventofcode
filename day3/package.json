@@ -1,0 +1,15 @@
+{
+  "name": "adventofcode-day3",
+  "version": "1.0.0",
+  "description": "My solution for Advent of Code Day 3",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Evan Kaiser",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^2.12.2"
+  }
+}
