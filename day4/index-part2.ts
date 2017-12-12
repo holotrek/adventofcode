@@ -19,7 +19,7 @@ if (input) {
             const passphrases = data.split(os.EOL);
             let validCount = 0;
             for (const p of passphrases) {
-                if ((new PassphraseValidator(p)).validatePassphrase()) {
+                if ((new PassphraseValidator(p, true)).validatePassphrase()) {
                     validCount++;
                 }
             }

@@ -19,7 +19,7 @@ if (input) {
             var validCount = 0;
             for (var _i = 0, passphrases_1 = passphrases; _i < passphrases_1.length; _i++) {
                 var p = passphrases_1[_i];
-                if ((new passphrase_validator_1.PassphraseValidator(p)).validatePassphrase()) {
+                if ((new passphrase_validator_1.PassphraseValidator(p, true)).validatePassphrase()) {
                     validCount++;
                 }
             }
