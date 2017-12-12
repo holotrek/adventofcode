@@ -3,32 +3,45 @@
 
 const Directions = require('./directions.js');
 
-function SpiralMemory(finalNumber, initialDirection) {
+function AdditiveSpiralMemory(finalNumber, initialDirection) {
     this.curDir = initialDirection ? initialDirection : Directions.down;
-    this.grid = [];
     this.coords = [];
     this.coordBuffer = 0;
-    this.generateSpiral(finalNumber);
+    this.largestSum = this.generateSpiral(finalNumber);
 };
 
-SpiralMemory.prototype.generateSpiral = function(finalNumber) {
+AdditiveSpiralMemory.prototype.generateSpiral = function(finalNumber) {
     let curPos = { x: 0, y: 0 };
-    for (let i = 0; i < finalNumber; i++) {
-        let num = i;
+    let sum = 0;
+    while (sum <= finalNumber) {
+        sum = 0;
 
-        // First, put the number in the current available space (caluclated by previous iteration)
-        this.setValue(curPos, num);
+        // First, calculate the next number by adding all the adjacent spaces with values
+        for (let x = curPos.x - 1; x <= curPos.x + 1; x++) {
+            for (let y = curPos.y - 1; y <= curPos.y + 1; y++) {
+                if (x === curPos.x && y === curPos.y) {
+                    continue;
+                }
+                const adjacent = this.getNum(x, y);
+                sum += adjacent ? adjacent : 0;
+            }
+        }
 
-        // Second, calculate the next available space
+        // Second, put the number in the current available space (caluclated by previous iteration)
+        this.setValue(curPos, sum ? sum : 1);
+
+        // Third, calculate the next available space
         if (this.isNextRotationSpaceEmpty(curPos.x, curPos.y)) {
             this.rotate();
         }
 
         curPos = this.moveForward(curPos.x, curPos.y, this.curDir);
     }
+
+    return sum;
 };
 
-SpiralMemory.prototype.increaseArraySize = function(pos) {
+AdditiveSpiralMemory.prototype.increaseArraySize = function(pos) {
     if (pos.x < 0 || pos.y < 0) {
         const greatestNegative = Math.max(Math.abs(pos.x), Math.abs(pos.y));
         if (greatestNegative > this.coordBuffer) {
@@ -42,25 +55,18 @@ SpiralMemory.prototype.increaseArraySize = function(pos) {
     }
 };
 
-SpiralMemory.prototype.setValue = function(pos, num) {
+AdditiveSpiralMemory.prototype.setValue = function(pos, num) {
     this.increaseArraySize(pos);
-    this.grid[num] = pos;
     const x = pos.x + this.coordBuffer;
     const y = pos.y + this.coordBuffer;
     if (!this.coords[y]) {
         this.coords[y] = [];
     }
 
-    this.coords[y][x] = num + 1;
+    this.coords[y][x] = num;
 };
 
-SpiralMemory.prototype.calculateDistance = function(fromNum, toNum) {
-    const fromPos = this.grid[fromNum-1];
-    const toPos = this.grid[toNum-1];
-    return Math.abs(fromPos.x - toPos.x) + Math.abs(fromPos.y - toPos.y);
-};
-
-SpiralMemory.prototype.print = function() {
+AdditiveSpiralMemory.prototype.print = function() {
     for (let y = this.coords.length - 1; y >= 0; y--) {
         let row = '';
         if (!this.coords[y]) {
@@ -77,7 +83,7 @@ SpiralMemory.prototype.print = function() {
     }
 };
 
-SpiralMemory.prototype.getNum = function(x, y) {
+AdditiveSpiralMemory.prototype.getNum = function(x, y) {
     if (!this.coords[y + this.coordBuffer]) {
         return null;
     }
@@ -86,13 +92,13 @@ SpiralMemory.prototype.getNum = function(x, y) {
     return num ? num : null;
 };
 
-SpiralMemory.prototype.isNextRotationSpaceEmpty = function(x, y) {
+AdditiveSpiralMemory.prototype.isNextRotationSpaceEmpty = function(x, y) {
     const testDir = this.getNextDirection(this.curDir);
     const testPos = this.moveForward(x, y, testDir);
     return !this.getNum(testPos.x, testPos.y);
 };
 
-SpiralMemory.prototype.moveForward = function(x, y, dir) {
+AdditiveSpiralMemory.prototype.moveForward = function(x, y, dir) {
     switch (dir) {
         case Directions.right:
             x++;
@@ -111,7 +117,7 @@ SpiralMemory.prototype.moveForward = function(x, y, dir) {
     return { x: x, y: y };
 }
 
-SpiralMemory.prototype.getNextDirection = function(dir) {
+AdditiveSpiralMemory.prototype.getNextDirection = function(dir) {
     let nextDir = dir + 1;
     if (!Directions[nextDir]) {
         nextDir = Directions.right;
@@ -119,8 +125,8 @@ SpiralMemory.prototype.getNextDirection = function(dir) {
     return nextDir;
 };
 
-SpiralMemory.prototype.rotate = function() {
+AdditiveSpiralMemory.prototype.rotate = function() {
     this.curDir = this.getNextDirection(this.curDir);
 };
 
-module.exports = SpiralMemory;
+module.exports = AdditiveSpiralMemory;

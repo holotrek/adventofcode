@@ -10,11 +10,11 @@ NodeJS >= 6.11.0
 To execute part1 of the day:
 
 ```
-./part1.py [spreadsheetFileName]
+npm start -- part1 <puzzleInput>
 ```
 
 To execute part2 of the day:
 
 ```
-./part2.py [spreadsheetFileName]
+npm start -- part2 <puzzleInput>
 ```
