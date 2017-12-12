@@ -3,18 +3,24 @@ Solutions for Advent of Code
 
 ## Prerequisites
 
-Python >= 2.7
+NodeJS >= 6.11.0
 
-## Day2
+## Install
+
+```
+npm i
+```
+
+## Day4
 
 To execute part1 of the day:
 
 ```
-./part1.py [spreadsheetFileName]
+npm start -- part1 ..\puzzleInput.txt
 ```
 
 To execute part2 of the day:
 
 ```
-./part2.py [spreadsheetFileName]
+npm start -- part2 ..\puzzleInput.txt
 ```

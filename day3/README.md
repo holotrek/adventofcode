@@ -5,7 +5,13 @@ Solutions for Advent of Code
 
 NodeJS >= 6.11.0
 
-## Day1
+## Install
+
+```
+npm i
+```
+
+## Day3
 
 To execute part1 of the day:
 
