@@ -3,18 +3,18 @@ Solutions for Advent of Code
 
 ## Prerequisites
 
-php-cli >= 7.0
+dotnet >= 2.0
 
-## Day5
+## Day6
 
 To execute part1 of the day:
 
 ```
-./part1.php puzzleInput.txt
+dotnet run part1 puzzleInput.txt
 ```
 
 To execute part2 of the day:
 
 ```
-./part2.php puzzleInput.txt
+dotnet run part2 puzzleInput.txt
 ```
