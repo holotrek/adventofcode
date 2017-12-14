@@ -3,8 +3,11 @@
     (:require [aoc.readFile :as rf] )
 )
     
-(defn -main [inputFile]
+(defn -main [part inputFile]
     (def data (rf/read-data inputFile))
     (def tree (bt/make-tree data))
-    (println (bt/find-bottom tree))
+    (if (= part "1")
+        (println (bt/find-bottom tree))
+        ;(println)
+    )
 )
