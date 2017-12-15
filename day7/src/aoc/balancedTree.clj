@@ -3,19 +3,23 @@
 )
 
 (defn make-node [line]
-    (def node (str/split line #" "))
-    (def newNode [
-        (get node 0)
-        (Integer. (str/replace (get node 1) #"\(|\)" ""))
-        (if (re-find #"->" line) 
-            (map str/trim (str/split (get (str/split line #"->") 1) #"(,\s)+"))
-            '())
-        ])
-    newNode)
+    (let [
+        node (str/split line #" ")
+        newNode [
+            (get node 0)
+            (Integer. (str/replace (get node 1) #"\(|\)" ""))
+            (if (re-find #"->" line) 
+                (map str/trim (str/split (get (str/split line #"->") 1) #"(,\s)+"))
+                '())
+        ]]
+        newNode
+    )
+)
 
 (defn make-tree [data]
-    (def lines (str/split data #"\n"))
-    (map make-node lines)
+    (let [lines (str/split data #"\n")]
+        (map make-node lines)
+    )
 )
 
 (defn find-parent-of [tree childName]
@@ -29,9 +33,10 @@
 (declare get-total-weight)
 
 (defn get-child-weight [tree node]
-    (def children (get node 2))
-    (def weights (map #(get-total-weight tree %) children))
-    (reduce + weights)
+    (let [children (get node 2)
+        weights (map #(get-total-weight tree %) children)]
+        (reduce + weights)
+    )
 )
 
 (defn get-node [tree nodeName]
@@ -39,42 +44,45 @@
 )
 
 (defn get-total-weight [tree nodeName]
-    (def node (get-node tree nodeName))
-    (if (empty? (get node 2)) 
-        (get node 1) 
-        (+ (get node 1) (get-child-weight tree node))
+    (let [node (get-node tree nodeName)]
+        (if (empty? (get node 2)) 
+            (get node 1) 
+            (+ (get node 1) (get-child-weight tree node))
+        )
     )
 )
 
 (defn find-different-weight [weights]
-    (def l (seq weights))
-    (def chk (get (first l) 1))
-    (def ne (filter #(not= (get % 1) chk) l))
-    (if (= (count ne) 1)
-        (first ne)
-        (first l)
+    (let [l (seq weights)
+        chk (get (first l) 1)
+        ne (filter #(not= (get % 1) chk) l)]
+        (if (= (count ne) 1)
+            (get (first ne) 0)
+            (get (first l) 0)
+        )
     )
 )
 
 (defn get-sibling-weight [tree node]
-    (def parent (find-parent-of tree (get node 0)))
-    (def children (get parent 2))
-    (def otherChild (first (filter #(not= (get % 0) (get node 0)) children)))
-    (get-total-weight tree (get otherChild 0))
+    (let [parent (find-parent-of tree (get node 0))
+        children (get parent 2)
+        otherChild (first (filter #(not= % (get node 0)) children))]
+        (get-total-weight tree otherChild)
+    )
 )
 
 (defn find-unbalance [tree & nodeName]
-    (def node 
+    (let [node 
         (if (empty? nodeName)
             (find-bottom tree)
             (get-node tree nodeName)
         )
-    )
-    (def children (get node 2))
-    (def weights (into {} (map (fn [x] [x (get-total-weight tree x)]) children)))
-    (println (find-different-weight weights))
-    (if (every? #{(first weights)} weights)
-        (get-sibling-weight tree node)
-        (recur tree (find-different-weight weights))
+        children (get node 2)
+        weightMap (into {} (map (fn [x] [x (get-total-weight tree x)]) children))
+        weights (map (fn [x] (get x 1)) weightMap)]
+        (if (every? #{(first weights)} weights)
+            [nodeName (- (get-sibling-weight tree node) (get-child-weight tree node))]
+            (recur tree (find-different-weight weightMap))
+        )
     )
 )
