@@ -8,6 +8,6 @@
     (def tree (bt/make-tree data))
     (if (= part "1")
         (println (bt/find-bottom tree))
-        ;(println)
+        (println (bt/find-unbalance tree))
     )
 )
