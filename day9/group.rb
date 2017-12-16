@@ -38,7 +38,7 @@ class Group
                             puts "opening new group"
                             grp = Group.new(@data[i..-1])
                             @innerGroups.push(grp)
-                            i += grp.consume
+                            i += grp.consume || 0
                         end
                     when GROUP_CLOSER
                         if !inGarbage
@@ -68,6 +68,15 @@ class Group
             end
         end
     end
+
+    def getScore(level = 0)
+        level += 1
+        score = level
+        innerGroups.each do |grp|
+            score += grp.getScore(level)
+        end
+        return score
+    end
 end
 
 if __FILE__ == $0
@@ -83,7 +92,11 @@ Usage: ruby group.rb <part1|part2> <puzzleInput|puzzleInputFile>
         fail
     end
 
-    data = ARGV[1]
+    data = ARGV[1].dup
+    
+    # Strip escape characters before !, i.e. \!
+    data.gsub! '\\!', '!'
+
     if File.file?(data)
         # File exists, so data is a filename, so read the contents
         data = File.read(data)
@@ -94,7 +107,7 @@ Usage: ruby group.rb <part1|part2> <puzzleInput|puzzleInputFile>
     grp.printGroup
 
     if ARGV[0] == "part1"
-
+        puts grp.getScore
     else
     end
 end

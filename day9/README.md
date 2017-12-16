@@ -10,11 +10,11 @@ ruby >= 2.3
 To execute part1 of the day:
 
 ```
-ruby part1 puzzleInput.txt
+ruby group.rb part1 puzzleInput.txt
 ```
 
 To execute part2 of the day:
 
 ```
-ruby part2 puzzleInput.txt
+ruby group.rb part2 puzzleInput.txt
 ```
