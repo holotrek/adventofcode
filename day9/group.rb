@@ -23,6 +23,7 @@ class Group
         i = 1
         cancelled = false
         inGarbage = false
+        garbageCount = 0
         while i <= @data.length
             print "Pos #{i}: #{@data[i]} - "
             if cancelled
@@ -34,26 +35,44 @@ class Group
                         puts "cancelling next"
                         cancelled = true
                     when GROUP_OPENER
-                        if !inGarbage
+                        if inGarbage
+                            garbageCount += 1
+                            puts "in garbage"
+                        else
                             puts "opening new group"
                             grp = Group.new(@data[i..-1])
                             @innerGroups.push(grp)
-                            i += grp.consume || 0
+                            result = grp.consume || [0, 0]
+                            i += result[0]
+                            garbageCount += result[1]
                         end
                     when GROUP_CLOSER
-                        if !inGarbage
+                        if inGarbage
+                            garbageCount += 1
+                            puts "in garbage"
+                        else
                             puts "closing group"
                             @data = @data[0, i+1]
-                            return i
+                            return i, garbageCount
                         end
                     when GARBAGE_OPENER
-                        puts "starting garbage"
-                        inGarbage = true
+                        if inGarbage
+                            garbageCount += 1
+                            puts "in garbage"
+                        else
+                            puts "starting garbage"
+                            inGarbage = true
+                        end
                     when GARBAGE_CLOSER
                         puts "ending garbage"
                         inGarbage = false
                     else
-                        puts "random char or in garbage"
+                        if inGarbage
+                            garbageCount += 1
+                            puts "in garbage"
+                        else
+                            puts "random char"
+                        end
                 end
             end
             i += 1
@@ -103,11 +122,12 @@ Usage: ruby group.rb <part1|part2> <puzzleInput|puzzleInputFile>
     end
 
     grp = Group.new(data)
-    grp.consume
+    result = grp.consume
     grp.printGroup
 
     if ARGV[0] == "part1"
         puts grp.getScore
     else
+        puts result[1]
     end
 end
