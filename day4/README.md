@@ -11,7 +11,7 @@ NodeJS >= 6.11.0
 npm i
 ```
 
-## Day4
+## Day 4
 
 To execute part1 of the day:
 

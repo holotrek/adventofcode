@@ -8,7 +8,7 @@ Solutions for Advent of Code
 * Java (JDK)
 * Clojure
 
-## Day7
+## Day 7
 
 To execute part1 of the day:
 

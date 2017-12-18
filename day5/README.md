@@ -5,7 +5,7 @@ Solutions for Advent of Code
 
 php-cli >= 7.0
 
-## Day5
+## Day 5
 
 To execute part1 of the day:
 

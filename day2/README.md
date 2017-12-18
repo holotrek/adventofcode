@@ -5,7 +5,7 @@ Solutions for Advent of Code
 
 Python >= 2.7
 
-## Day2
+## Day 2
 
 To execute part1 of the day:
 

@@ -5,7 +5,7 @@ Solutions for Advent of Code
 
 dotnet >= 2.0
 
-## Day6
+## Day 6
 
 To execute part1 of the day:
 
