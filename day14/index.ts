@@ -1,6 +1,7 @@
 import { Disk } from './disk';
 import { Command } from 'commander';
 import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
 
 import { KnotHash } from './knot-hash';
@@ -14,18 +15,25 @@ program
     .option('-k, --key <key>', 'The puzzle input [key] if not using a file. Defaults to empty.')
     .parse(process.argv);
 
-const part1 = (data: string, length: number) => {
+const partCommon = (data: string, length: number) => {
     const salt = [17, 31, 73, 47, 23];
     const hash = new KnotHash(length);
     const disk = new Disk(hash, salt);
     disk.fillDisk(data);
-    for (const i of disk.grid) {
-        console.log(i.join(''));
-    }
+    return disk;
+}
+
+const part1 = (data: string, length: number) => {
+    const disk = partCommon(data, length);
+    fs.writeFileSync(path.join(__dirname, '..', 'part1out.txt'), disk.printGrid(os.EOL));
     console.log(disk.countUsed());
 };
 
 const part2 = (data: string, length: number) => {
+    const disk = partCommon(data, length);
+    const regionCount = disk.countRegions();
+    fs.writeFileSync(path.join(__dirname, '..', 'part2out.txt'), disk.printGrid(os.EOL, disk.regionGrid));
+    console.log(regionCount);
 };
 
 const options = {

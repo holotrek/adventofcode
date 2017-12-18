@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const disk_1 = require("./disk");
 const commander_1 = require("commander");
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 const knot_hash_1 = require("./knot-hash");
 const program = new commander_1.Command();
@@ -13,17 +14,23 @@ program
     .option('-f, --file <file>', 'The [file] to use for puzzle input (key). Overrides use of the -k/--key flag.')
     .option('-k, --key <key>', 'The puzzle input [key] if not using a file. Defaults to empty.')
     .parse(process.argv);
-const part1 = (data, length) => {
+const partCommon = (data, length) => {
     const salt = [17, 31, 73, 47, 23];
     const hash = new knot_hash_1.KnotHash(length);
     const disk = new disk_1.Disk(hash, salt);
     disk.fillDisk(data);
-    for (const i of disk.grid) {
-        console.log(i.join(''));
-    }
+    return disk;
+};
+const part1 = (data, length) => {
+    const disk = partCommon(data, length);
+    fs.writeFileSync(path.join(__dirname, '..', 'part1out.txt'), disk.printGrid(os.EOL));
     console.log(disk.countUsed());
 };
 const part2 = (data, length) => {
+    const disk = partCommon(data, length);
+    const regionCount = disk.countRegions();
+    fs.writeFileSync(path.join(__dirname, '..', 'part2out.txt'), disk.printGrid(os.EOL, disk.regionGrid));
+    console.log(regionCount);
 };
 const options = {
     length: +program.length || 16,
