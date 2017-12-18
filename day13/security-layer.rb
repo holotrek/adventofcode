@@ -1,13 +1,11 @@
-module Firewall
+class SecurityLayer
     attr_accessor :testVar
+    
+    def initialize(test)
+        @testVar = test
+    end
 
-    class SecurityLayer
-        def initialize(test)
-            @testVar = test
-        end
-
-        def toString()
-            return @testVar
-        end
+    def toString()
+        return @testVar
     end
 end
