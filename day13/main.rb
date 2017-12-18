@@ -18,6 +18,8 @@ Usage: ruby main.rb <part1|part2> <puzzleInputFile>
     if ARGV[0] == "part1"
         puts fw.movePackets()
     else
+        time = Time.now.getutc
+        puts time
         severity = 0
         delay = 0
         loop do
@@ -26,6 +28,8 @@ Usage: ruby main.rb <part1|part2> <puzzleInputFile>
             puts delay
             delay += 1
         end
+        time = Time.now.getutc - time
         puts delay
+        puts "Processing time of #{time} seconds"
     end
 end
