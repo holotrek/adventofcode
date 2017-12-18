@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const disk_1 = require("./disk");
 const commander_1 = require("commander");
 const fs = require("fs");
 const path = require("path");
@@ -13,17 +14,16 @@ program
     .option('-k, --key <key>', 'The puzzle input [key] if not using a file. Defaults to empty.')
     .parse(process.argv);
 const part1 = (data, length) => {
-    const input = data.split(',');
-    const hash = new knot_hash_1.KnotHash(length);
-    for (const len of input) {
-        hash.twist(+len);
-    }
-    console.log(hash.values[0] * hash.values[1]);
-};
-const part2 = (data, length) => {
     const salt = [17, 31, 73, 47, 23];
     const hash = new knot_hash_1.KnotHash(length);
-    console.log(hash.computeHash(data, salt));
+    const disk = new disk_1.Disk(hash, salt);
+    disk.fillDisk(data);
+    for (const i of disk.grid) {
+        console.log(i.join(''));
+    }
+    console.log(disk.countUsed());
+};
+const part2 = (data, length) => {
 };
 const options = {
     length: +program.length || 16,

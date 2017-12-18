@@ -3,11 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class KnotHash {
     constructor(length) {
         this.length = length;
-        this.values = Array.from(Array(length).keys());
+        this.values = Array.from(Array(length * 16).keys());
         this.curPos = 0;
         this.skip = 0;
     }
     computeHash(key, salt, iterations = 64) {
+        console.log(`Computing hash with key ${key} and salt ${salt.join(',')} and iterations ${iterations}.`);
         const asciiVals = key.split('').map(c => c.charCodeAt(0)).concat(salt);
         for (let i = 0; i < iterations; i++) {
             for (const j of asciiVals) {

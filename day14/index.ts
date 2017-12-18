@@ -1,10 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const commander_1 = require("commander");
-const fs = require("fs");
-const path = require("path");
-const knot_hash_1 = require("./knot-hash");
-const program = new commander_1.Command();
+import { Disk } from './disk';
+import { Command } from 'commander';
+import * as fs from 'fs';
+import * as path from 'path';
+
+import { KnotHash } from './knot-hash';
+
+const program = new Command();
 program
     .version('0.0.1')
     .option('-l, --length <length>', 'Indicates the [length] of the dense hash in bytes. Default: 16')
@@ -12,25 +13,28 @@ program
     .option('-f, --file <file>', 'The [file] to use for puzzle input (key). Overrides use of the -k/--key flag.')
     .option('-k, --key <key>', 'The puzzle input [key] if not using a file. Defaults to empty.')
     .parse(process.argv);
-const part1 = (data, length) => {
-    const input = data.split(',');
-    const hash = new knot_hash_1.KnotHash(length);
-    for (const len of input) {
-        hash.twist(+len);
-    }
-    console.log(hash.values[0] * hash.values[1]);
-};
-const part2 = (data, length) => {
+
+const part1 = (data: string, length: number) => {
     const salt = [17, 31, 73, 47, 23];
-    const hash = new knot_hash_1.KnotHash(length);
-    console.log(hash.computeHash(data, salt));
+    const hash = new KnotHash(length);
+    const disk = new Disk(hash, salt);
+    disk.fillDisk(data);
+    for (const i of disk.grid) {
+        console.log(i.join(''));
+    }
+    console.log(disk.countUsed());
 };
+
+const part2 = (data: string, length: number) => {
+};
+
 const options = {
     length: +program.length || 16,
     part: +program.part || 1,
     file: program.file,
     key: program.key
-};
+}
+
 if (options.file) {
     fs.readFile(path.join(__dirname, '..', options.file), 'ascii', (err, data) => {
         if (err) {
