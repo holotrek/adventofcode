@@ -4,9 +4,9 @@ export class KnotHash {
     skip: number;
 
     constructor(
-        private length: number
+        length: number
     ) {
-        this.values = Array.from(Array(length).keys());
+        this.values = Array.from(Array(length * 16).keys());
         this.curPos = 0;
         this.skip = 0;
     }
