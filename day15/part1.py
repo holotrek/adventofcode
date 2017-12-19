@@ -25,16 +25,19 @@ def toBin(num):
     return "{0:b}".format(num)
 
 matchCount = 0
-for i in range(iterations):
+i = 0
+while i < iterations:
+    i += 1
+
     gen1 = generate(gen1, gen1factor, div)
     gen2 = generate(gen2, gen2factor, div)
 
     gen1Last16 = toBin(gen1)[-16:]
     gen2Last16 = toBin(gen2)[-16:]
 
-    print gen1Last16
-    print gen2Last16
-    print ""
+    # print gen1Last16
+    # print gen2Last16
+    # print ""
     
     if gen1Last16 == gen2Last16:
         matchCount+=1
