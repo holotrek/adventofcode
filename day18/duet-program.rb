@@ -1,23 +1,40 @@
-class Duet
+class DuetProgram
     attr_reader :instructions
     attr_reader :registers
-    attr_accessor :lastSound
+    attr_reader :inQueue
+    attr_reader :outQueue
     attr_accessor :position
-    attr_accessor :recoveredFreq
+    attr_accessor :finished
+    attr_accessor :waiting
+    attr_accessor :sentCount
 
-    def initialize(instructions)
+    def initialize(progId, instructions)
         @registers = []
+        @registers['p'.ord] = progId
         @instructions = instructions
         @position = 0
+        @sentCount = 0
+        @inQueue = Queue.new
+        @outQueue = Queue.new
     end
 
-    def play()
-        while @position < @instructions.length && !@recoveredFreq
-            execute(@instructions[@position])
+    def input(val)
+        @inQueue << val
+    end
+
+    def increment(value)
+        @position += value
+        if @position >= @instructions.length
+            @finished = true
         end
     end
 
-    def execute(str)
+    def execute()
+        if @finished
+            return
+        end
+
+        str = @instructions[@position]
         parts = str.split(' ')
         reg = nil
         firstVal = nil
@@ -37,45 +54,58 @@ class Duet
             end
         end
 
-        if !@registers[reg]
+        if reg && !@registers[reg]
             @registers[reg] = 0
         end
         
+        print "Program #{@registers['p'.ord]}: "
         case parts[0]
             when "snd"
-                @lastSound = if reg then @registers[reg] else firstVal end
-                puts "Played sound of freq #{lastSound}"
+                send = if reg then @registers[reg] else firstVal end
+                @outQueue << send
+                @sentCount += 1
+                increment(1)
+                puts "Sent #{send}"
             when "set"
                 @registers[reg] = value
+                increment(1)
                 puts "Set register #{reg} to #{value}"
             when "add"
                 @registers[reg] += value
+                increment(1)
                 puts "Added #{value} to register #{reg} = #{@registers[reg]}"
             when "mul"
                 @registers[reg] *= value
+                increment(1)
                 puts "Multiplied #{value} to register #{reg} = #{@registers[reg]}"
             when "mod"
                 @registers[reg] %= value
+                increment(1)
                 puts "Modded #{value} to register #{reg} = #{@registers[reg]}"
             when "rcv"
-                valToCheck = if reg then @registers[reg] else firstVal end
-                if valToCheck > 0
-                    @recoveredFreq = @lastSound
-                    puts "Recovered frequency #{@lastSound}"
+                if @inQueue.length > 0
+                    @registers[reg] = @inQueue.pop
+                    increment(1)
+                    @waiting = false
+                    puts "Received #{@registers[reg]} into register #{reg}"
                 else
-                    puts "Could not recover frequency since check val is 0"
+                    @waiting = true
+                    puts "Nothing in queue to receive. Waiting..."
                 end
             when "jgz"
                 valToCheck = if reg then @registers[reg] else firstVal end
                 if valToCheck > 0
-                    @position += value
+                    increment(value)
                     puts "Jumped #{value} instructions"
                     return
                 else
+                    increment(1)
                     puts "Could not jump since check val is 0"
                 end
         end
-        @position += 1
-    end
 
+        if @finished
+            puts "Program #{@registers['p'.ord]} finished."
+        end
+    end
 end
