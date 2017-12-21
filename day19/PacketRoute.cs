@@ -19,19 +19,24 @@ namespace day19
 
         public PacketRoute(IEnumerable<string> data)
         {
-            this.Word = string.Empty;
-            this.Route = data.ToList();
+            this.Route = data.Where(x => x.Length > 0).ToList();
             _curIndex = (this.Route[0].IndexOf('|'), 0);
             _curDir = Direction.South;
         }
 
-        public string Word { get; private set; }    
+        public string Word { get; private set; } = string.Empty;
+
+        public int Steps { get; private set; } = 1;
 
         public List<string> Route { get; private set; }
 
         public void Travel()
         {
-            while (this.Move()) { }
+            do
+            {
+                this.Steps++;
+            }
+            while (this.Move());
         }
 
         public (int X, int Y) GetNextPosition()
@@ -67,7 +72,6 @@ namespace day19
             var chr = this.GetNextCharacter();
             _curIndex = this.GetNextPosition();
 
-            Console.WriteLine($"Next character: {chr}");
             if (Char.IsLetter(chr))
             {
                 this.Word += chr;
@@ -76,22 +80,22 @@ namespace day19
             {
                 if (_curDir == Direction.North || _curDir == Direction.South)
                 {
-                    if (this.Route[_curIndex.Y][_curIndex.X + 1] != ' ')
+                    if (this.Route[_curIndex.Y].Count() > _curIndex.X + 1 && this.Route[_curIndex.Y][_curIndex.X + 1] != ' ')
                     {
                         _curDir = Direction.East;
                     }
-                    else if (this.Route[_curIndex.Y][_curIndex.X - 1] != ' ')
+                    else if (_curIndex.X > 0 && this.Route[_curIndex.Y][_curIndex.X - 1] != ' ')
                     {
                         _curDir = Direction.West;
                     }
                 }
                 else
                 {
-                    if (this.Route[_curIndex.Y + 1][_curIndex.X] != ' ')
+                    if (this.Route.Count() > _curIndex.Y + 1 && this.Route[_curIndex.Y + 1][_curIndex.X] != ' ')
                     {
                         _curDir = Direction.South;
                     }
-                    else if (this.Route[_curIndex.Y - 1][_curIndex.X] != ' ')
+                    else if (_curIndex.Y > 0 && this.Route[_curIndex.Y - 1][_curIndex.X] != ' ')
                     {
                         _curDir = Direction.North;
                     }

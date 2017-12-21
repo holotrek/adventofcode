@@ -15,6 +15,7 @@ namespace day19
             var pr = new PacketRoute(File.ReadAllLines(args[0]));
             pr.Travel();
             Console.WriteLine(pr.Word);
+            Console.WriteLine(pr.Steps);
         }
     }
 }
