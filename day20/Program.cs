@@ -7,23 +7,34 @@ namespace day20
     {
         static void Main(string[] args)
         {
-            if (args.Length < 1)
+            if (args.Length < 2)
             {
-                Console.WriteLine("Usage: dotnet run <puzzleInputFile> [iterations (def: 1000)]");
+                Console.WriteLine("Usage: dotnet run <part1|part2> <puzzleInputFile> [iterations (def: 1000)]");
             }
 
             int iter = 1000;
-            if (args.Length > 1)
+            if (args.Length > 2)
             {
-                int.TryParse(args[1], out iter);
+                int.TryParse(args[2], out iter);
             }
 
-            var pg = new ParticleGenerator(File.ReadAllLines(args[0]));
-            File.WriteAllText("test.txt", pg.ToString());
-            for (int i = 0; i < iter; i++)
+            var pg = new ParticleGenerator(File.ReadAllLines(args[1]));
+
+            if (args[0] == "part1") 
             {
-                pg.Recalculate();
-                Console.WriteLine(pg.ClosestParticle);
+                for (int i = 0; i < iter; i++)
+                {
+                    pg.Recalculate(false);
+                    Console.WriteLine(pg.ClosestParticle);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < iter; i++)
+                {
+                    pg.Recalculate(true);
+                    Console.WriteLine(pg.Count());
+                }
             }
         }
     }

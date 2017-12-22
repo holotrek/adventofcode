@@ -7,8 +7,14 @@ dotnet >= 2.0
 
 ## Day 20
 
-To execute both parts of the day:
+To execute part1 of the day:
 
 ```
-dotnet run puzzleInput.txt
+dotnet run part1 puzzleInput.txt
+```
+
+To execute part2 of the day:
+
+```
+dotnet run part2 puzzleInput.txt
 ```

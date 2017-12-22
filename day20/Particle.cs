@@ -5,8 +5,9 @@ namespace day20
 {
     public class Particle
     {
-        public Particle(string initialState)
+        public Particle(int id, string initialState)
         {
+            this.Id = id;
             var components = initialState.Split(", ").Select(x => x.Trim());
             foreach (var c in components)
             {
@@ -27,6 +28,8 @@ namespace day20
                 }
             }
         }
+
+        public int Id { get; private set; }
 
         public (long X, long Y, long Z) Position { get; private set; }
 

@@ -10,14 +10,18 @@ namespace day20
 
         public ParticleGenerator(IEnumerable<string> data)
         {
-            _particles = data.Select(x => new Particle(x)).ToList();
+            int i = -1;
+            _particles = data.Select(x => {
+                i++;
+                return new Particle(i, x);
+            }).ToList();
         }
 
         public int ClosestParticle { get; private set; } = -1;
 
         public long MinDistance { get; private set; } = int.MaxValue;
 
-        public void Recalculate()
+        public void Recalculate(bool removeCollisions)
         {
             this.ClosestParticle = -1;
             this.MinDistance = int.MaxValue;
@@ -30,6 +34,22 @@ namespace day20
                     this.ClosestParticle = i;
                 }
             }
+
+            if (removeCollisions)
+            {
+                foreach (var grp in _particles.GroupBy(x => x.Position))
+                {
+                    if (grp.Count() > 1)
+                    {
+                        _particles.RemoveAll(x => grp.Where(y => y.Id == x.Id).Any());
+                    }
+                }
+            }
+        }
+
+        public int Count()
+        {
+            return _particles.Count();
         }
 
         public override string ToString()
