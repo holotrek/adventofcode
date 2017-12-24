@@ -15,6 +15,12 @@ Usage: ruby main.rb <part1|part2> <puzzleInputFile>
         data.push(l)
     end
 
+    def is_prime?(num)
+        return false if num <= 1
+        Math.sqrt(num).to_i.downto(2).each {|i| return false if num % i == 0}
+        true
+    end
+
     if ARGV[0] == "part1"
         duet = DuetProgram.new(0, data)
         while !duet.finished
@@ -22,13 +28,15 @@ Usage: ruby main.rb <part1|part2> <puzzleInputFile>
         end
         puts duet.multCount
     else
-        duet = DuetProgram.new(0, data, true)
-        while !duet.finished
-            duet.execute
-            puts duet.toString
-            if duet.registers['h'.ord]
-                puts duet.registers['h'.ord]
+        count = 0
+        input = 57
+        low = 100000 + (input * 100)
+        high = low + 17000
+        (low..high+1).step(17) do |i|
+            if not is_prime?(i)
+                count += 1
             end
         end
+        puts count
     end
 end
