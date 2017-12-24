@@ -5,7 +5,7 @@ Solutions for Advent of Code
 
 ruby >= 2.3
 
-## Day 18
+## Day 23
 
 To execute part1 of the day:
 
