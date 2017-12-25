@@ -5,7 +5,7 @@ if len(sys.argv) < 2:
   print 'Invalid command: ' + ' '.join(sys.argv)
   print '''
   Usage:
-    ./part1.py <puzzleInputFile>
+    ./part2.py <puzzleInputFile>
   '''
 
 data = [x.strip() for x in open(sys.argv[1]).readlines()]
@@ -46,9 +46,12 @@ def findNextLinks(lastNum, bridge = None, linksUsed = None):
 findNextLinks(0)
 
 maxStrength = 0
+lengths = map(lambda x: len(x), bridges)
+maxLength = max(lengths)
 for b in bridges:
-    strength = sum(b)
-    if strength > maxStrength:
-        maxStrength = strength
+    if len(b) == maxLength:
+        strength = sum(b)
+        if strength > maxStrength:
+            maxStrength = strength
 
 print maxStrength
